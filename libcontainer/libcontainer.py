@@ -72,3 +72,23 @@ class Container():
         async with aiohttp.ClientSession() as session:
             async with session.post(url, headers=headers, json=data) as resp:
                 return await resp.json()
+            
+    async def edit(self, message: discord.Message, channel: int):
+        url = f"https://discord.com/api/v10/channels/{channel}/messages/{message.id}"
+        headers = {
+            "Authorization": f"Bot {self.token}",
+            "Content-Type": "application/json"
+        }
+        data = {
+            "flags": 32768,
+            "components": [
+                {
+                    "type": 17,
+                    "components": self.comp
+                }
+            ]
+        }
+
+        async with aiohttp.ClientSession() as session:
+            async with session.patch(url, headers=headers, json=data) as resp:
+                return await resp.json()
