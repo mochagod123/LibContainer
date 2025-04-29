@@ -92,3 +92,15 @@ class Container():
         async with aiohttp.ClientSession() as session:
             async with session.patch(url, headers=headers, json=data) as resp:
                 return await resp.json()
+            
+    async def fetch(self, message: discord.Message, channel: int):
+        url = f"https://discord.com/api/v10/channels/{channel}/messages/{message.id}"
+        headers = {
+            "Authorization": f"Bot {self.token}",
+            "Content-Type": "application/json"
+        }
+
+        async with aiohttp.ClientSession() as session:
+            async with session.get(url, headers=headers) as resp:
+                resp_ = await resp.json()
+                return resp_.get("components", None)
